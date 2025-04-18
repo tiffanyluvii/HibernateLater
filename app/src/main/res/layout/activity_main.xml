@@ -1,19 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="hi"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:id="@+id/topHalf"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@drawable/gym_background"
+        >
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Spacer -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10" />
+
+        <!-- Our Cutie Workout Bear -->
+        <View
+            android:id="@+id/bear"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:background="@drawable/regular_bear"/>
+
+
+        <!-- Options Bar (right side) -->
+        <LinearLayout
+            android:id="@+id/optionsBar"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/x_icon"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/x_icon"
+                />
+
+            <!-- Spacer -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/award_icon"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/award_icon"
+                />
+
+            <!-- Spacer -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/journal_icon"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/journal_icon"
+                />
+
+            <!-- Spacer -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/calendar_icon"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/calendar_icon"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/bottomHalf"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+        <!--        Put the timer in here-->
+        <LinearLayout
+            android:id="@+id/question"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            />
+
+        <LinearLayout
+            android:id="@+id/buttons"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>
