@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
             bear_icon.setBackgroundResource(R.drawable.dumbbell_bear_up)
         }
         check_exercise = !check_exercise
+
     }
 
     fun buildViewByCode(){
