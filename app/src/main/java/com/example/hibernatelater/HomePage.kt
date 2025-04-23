@@ -3,11 +3,13 @@ package com.example.hibernatelater
 import android.content.Context
 
 class HomePage {
-    var check_exercise: Boolean = false // is the user exercising currently
-    var check_break: Boolean = false // is the user currently on break
+    private var check_exercise: Boolean = false // is the user exercising currently
+    private var check_break: Boolean = false // is the user currently on break
+    private var currentExercise: Int = 1
+    private lateinit var listOfExercises: ArrayList<Exercise>
 
     constructor(context:Context){
-
+        this.listOfExercises = ArrayList<Exercise>()
     }
 
     fun startExercise(){
@@ -33,6 +35,20 @@ class HomePage {
     fun currentlyOnBreak(): Boolean{
         return this.check_break
     }
+
+    fun getCurrentExerciseNumber(): Int{
+        return this.currentExercise
+    }
+
+    fun incrementExerciseNumber(){
+        this.currentExercise += 1
+    }
+
+    fun addToList(exercise: Exercise){
+        this.listOfExercises.add(exercise)
+    }
+
+
 
 
 }
