@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
             // change this to a sleeping bear later
             bearIcon.setBackgroundResource(R.drawable.regular_bear)
         }
-        check_exercise = !check_exercise
+        checkExercise = !checkExercise
     }
 
     fun buildViewByCode(){
