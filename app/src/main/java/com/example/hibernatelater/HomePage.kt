@@ -48,6 +48,14 @@ class HomePage {
         this.listOfExercises.add(exercise)
     }
 
+    fun resetExerciseNumber(){
+        this.currentExercise = 1
+    }
+
+    fun clearArrayList(){
+        this.listOfExercises.clear()
+    }
+
 
 
 

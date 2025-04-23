@@ -39,4 +39,8 @@ class Exercise {
         return false
     }
 
+    fun resetSets(){
+        this.currentSet = 0
+    }
+
 }

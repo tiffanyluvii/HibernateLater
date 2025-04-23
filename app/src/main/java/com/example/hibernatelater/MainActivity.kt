@@ -1,6 +1,7 @@
 package com.example.hibernatelater
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -23,6 +24,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var calendarButton: AppCompatButton
     private lateinit var exerciseNumber: TextView
     private lateinit var enterButton: AppCompatButton
+    private lateinit var motivationSpacer: View
+    private lateinit var motivationMessage: TextView
 
     private lateinit var exerciseInput: EditText
     private lateinit var setInput: EditText
@@ -34,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var exerciseScreenBottom: LinearLayout
 
     private var checkExercise: Boolean = false
+    private lateinit var currentMessage: String
 
     private lateinit var homepage: HomePage
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,12 +56,11 @@ class MainActivity : AppCompatActivity() {
             } else {
                 bearIcon.setBackgroundResource(R.drawable.dumbbell_bear_up)
             }
-            checkExercise = !checkExercise
         } else {
             // change this to a sleeping bear later
             bearIcon.setBackgroundResource(R.drawable.regular_bear)
         }
-        check_exercise = !check_exercise
+        checkExercise = !checkExercise
     }
 
     fun buildViewByCode(){
@@ -82,6 +85,10 @@ class MainActivity : AppCompatActivity() {
         setInput = findViewById(R.id.setsInput)
         repInput = findViewById(R.id.repsInput)
 
+        motivationMessage = findViewById(R.id.motivation)
+//        motivationSpacer = findViewById(R.id.motivationSpacer)
+
+        currentMessage = getString(R.string.start_message)
 
         homepage = HomePage(this)
 
@@ -106,7 +113,13 @@ class MainActivity : AppCompatActivity() {
         } else if (currentPrompt == getString(R.string.before_break_message)){
             startBreak()
         } else if (currentPrompt == getString(R.string.after_break_message)){
-            startWorkout()
+            if (currentExercise.finishedExercise()){
+//                currentExercise.resetSets() you can't reset it but idk if it's necessarily
+                startWorkout()
+            } else {
+                currentExercise.incrementSet()
+                beforeBreakScreen()
+            }
         }
 
     }
@@ -114,15 +127,29 @@ class MainActivity : AppCompatActivity() {
     fun startWorkout(){
         homepage.endBreak()
         homepage.startExercise()
+
+//        motivationSpacer.visibility = View.VISIBLE
+        motivationMessage.visibility = View.GONE
+
         startScreenBottom.visibility = View.GONE
         exerciseScreenBottom.visibility = View.VISIBLE
         exerciseNumber.text = (getString(R.string.exercise_message) + homepage.getCurrentExerciseNumber())
+        currentMessage = exerciseNumber.text.toString()
         homepage.incrementExerciseNumber()
     }
 
     fun startBreak(){
         homepage.endExercise()
         homepage.startBreak()
+
+//        motivationSpacer.visibility = View.GONE
+        motivationMessage.visibility = View.GONE
+
+        // for testing purposes DELETE THIS
+        questionPrompt.text = getString(R.string.after_break_message)
+        currentMessage = getString(R.string.after_break_message)
+
+        // display the timer view
     }
 
     fun clickNo(){
@@ -134,33 +161,87 @@ class MainActivity : AppCompatActivity() {
 
         } else if (currentPrompt == getString(R.string.end_message)){
             // go back to the most recent view
+            if (currentMessage == exerciseNumber.text.toString()){
+                // check if they were in the exercise screen
+                homepage.endBreak()
+                homepage.startExercise()
+                startScreenBottom.visibility = View.GONE
+                exerciseScreenBottom.visibility = View.VISIBLE
+            } else if (currentMessage == getString(R.string.start_message)){
+                questionPrompt.text = getString(R.string.start_message)
+                currentMessage = getString(R.string.start_message)
+            } else if (currentMessage == getString(R.string.before_break_message)){
+                homepage.endBreak()
+                homepage.startExercise()
+                questionPrompt.text = getString(R.string.before_break_message)
+                currentMessage = getString(R.string.before_break_message)
+            } else if (currentMessage == getString(R.string.after_break_message)){
+                questionPrompt.text = getString(R.string.after_break_message)
+                currentMessage = getString(R.string.after_break_message)
+            }
         }
     }
 
     fun enterExercise(){
+
         var exerciseType: String = exerciseInput.text.toString()
-        var sets: Int = setInput.text.toString().toInt()
-        var reps: Int = repInput.text.toString().toInt()
 
-        currentExercise = Exercise(exerciseType, sets, reps)
+        if (exerciseType == ""){
+            exerciseInput.hint = "Please enter an exercise!"
+        } else if (setInput.text.toString() == ""){
+            exerciseNumber.text = "Please enter sets!"
+        } else if (repInput.text.toString() == ""){
+            exerciseNumber.text = "Please enter reps!"
+        } else {
+            var sets: Int = setInput.text.toString().toInt()
+            var reps: Int = repInput.text.toString().toInt()
 
-        homepage.addToList(currentExercise) // probably add it to the journal as well
+            exerciseNumber.text = currentMessage
+            Log.w("MainActivity", exerciseNumber.text.toString())
+            currentExercise = Exercise(exerciseType, sets, reps)
+
+            homepage.addToList(currentExercise) // probably add it to the journal as well
+
+            beforeBreakScreen()
+        }
+    }
+
+    fun beforeBreakScreen(){
+        homepage.endBreak()
+        homepage.startExercise()
 
         startScreenBottom.visibility = View.VISIBLE
         exerciseScreenBottom.visibility = View.GONE
-        questionPrompt.text = getString(R.string.before_break_message)
 
+//        motivationSpacer.visibility = View.GONE
+        motivationMessage.visibility = View.VISIBLE
+
+        questionPrompt.text = getString(R.string.before_break_message)
+        currentMessage = getString(R.string.before_break_message)
     }
 
     fun pressX(){
         homepage.endExercise()
         homepage.endBreak()
+
+//        motivationSpacer.visibility = View.VISIBLE
+        motivationMessage.visibility = View.GONE
+
+        startScreenBottom.visibility = View.VISIBLE
+        exerciseScreenBottom.visibility = View.GONE
         questionPrompt.text = getString(R.string.end_message)
     }
 
     fun endExercise(){
+//        motivationSpacer.visibility = View.VISIBLE
+        motivationMessage.visibility = View.GONE
+
         questionPrompt.text = getString(R.string.start_message)
+        currentMessage = getString(R.string.start_message)
         // reset the current exercise number
+        homepage.resetExerciseNumber()
+        // make sure to append the exercise into the journal
+        homepage.clearArrayList()
     }
 
 }
