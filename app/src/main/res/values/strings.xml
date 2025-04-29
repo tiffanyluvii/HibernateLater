@@ -4,5 +4,6 @@
     <string name="end_message">Are you done your workout for the day?</string>
     <string name="before_break_message">Do you want to start your break?</string>
     <string name="after_break_message">Are you ready to start your next set?</string>
-    <string name="exercise_message">Do you want begin a new exercise?</string>
+    <string name="exercise_message">EXERCISE #</string>
+    <string name="motivation_message">YOU GOT THIS!</string>
 </resources>
