@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Hibernate Later</string>
+    <string name="start_message">Do you want to start your workout?</string>
+    <string name="end_message">Are you done your workout for the day?</string>
+    <string name="before_break_message">Do you want to start your break?</string>
+    <string name="after_break_message">Are you ready to start your next set?</string>
+    <string name="exercise_message">EXERCISE #</string>
+    <string name="motivation_message">YOU GOT THIS!</string>
 </resources>

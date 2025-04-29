@@ -1,19 +1,333 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="hi"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:id="@+id/topHalf"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@drawable/gym_background"
+        >
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Spacer -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="10" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/motivation"
+                android:layout_width="300dp"
+                android:layout_height="125dp"
+                android:background="@drawable/blue_textbox"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:text="@string/motivation_message"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+            <View
+                android:id="@+id/motivationSpacer"
+                android:layout_width="300dp"
+                android:layout_height="125dp"
+                android:visibility="gone"/>
+
+            <!-- Our Cutie Workout Bear -->
+            <View
+                android:id="@+id/bear"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:background="@drawable/regular_bear"/>
+
+        </LinearLayout>
+
+
+
+        <!-- Options Bar (right side) -->
+        <LinearLayout
+            android:id="@+id/optionsBar"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/x_icon"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/x_icon"
+                />
+
+            <!-- Spacer -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/award_icon"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/award_icon"
+                />
+
+            <!-- Spacer -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/journal_icon"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/journal_icon"
+                />
+
+            <!-- Spacer -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/calendar_icon"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:background="@drawable/calendar_icon"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+<!--    start screen-->
+    <LinearLayout
+        android:id="@+id/bottomHalfStartScreen"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="#E5D3A7"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/question"
+                android:layout_width="350dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="28sp"
+                android:text="@string/start_message"
+                android:textColor="@color/black"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:background="@drawable/textbox"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/buttons"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/yes_button"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:background="@drawable/yes_button"
+                android:layout_marginBottom="75dp"
+                />
+
+            <View
+                android:layout_width="75dp"
+                android:layout_height="match_parent"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/no_button"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:background="@drawable/no_button"
+                android:layout_marginBottom="70dp"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+<!--    exercise screen-->
+    <LinearLayout
+        android:id="@+id/bottomHalfWorkoutScreen"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="#E5D3A7"
+        android:visibility="gone"
+        >
+        <!--        Put the timer in here-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/exerciseQuestion"
+                android:layout_width="350dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="28sp"
+                android:text="@string/exercise_message"
+                android:textColor="@color/black"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:background="@drawable/blue_textbox"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/workoutInput"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/exerciseInput"
+                android:layout_width="350dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="28sp"
+                android:textColor="@color/black"
+                android:hint="Enter your exercise!"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:background="@drawable/textbox"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/setsAndRepsInput"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
+                android:textColor="@color/black"
+                android:text="Sets:"
+                android:textSize="30sp"
+                android:gravity="center"
+                />
+
+
+            <EditText
+                android:id="@+id/setsInput"
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="28sp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:layout_marginLeft="10dp"
+                android:inputType="number"
+                android:background="@drawable/textbox"
+                />
+
+            <View
+                android:layout_width="25dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
+                android:textColor="@color/black"
+                android:text="Reps:"
+                android:textSize="30sp"
+                android:gravity="center"
+                />
+
+            <EditText
+                android:id="@+id/repsInput"
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="28sp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:layout_marginLeft="10dp"
+                android:inputType="number"
+                android:background="@drawable/textbox"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/enterButton"
+                android:layout_width="250dp"
+                android:layout_height="200dp"
+                android:gravity="center"
+                android:textSize="28sp"
+                android:textColor="@color/black"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:background="@drawable/enter_button"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>
