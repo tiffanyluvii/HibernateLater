@@ -5,15 +5,19 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ListView
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.util.Timer
 
 class MainActivity : AppCompatActivity() {
+    private var streak : Int = 0
+
     private lateinit var bearIcon: View
     private lateinit var yesButton: AppCompatButton
     private lateinit var noButton: AppCompatButton
@@ -36,10 +40,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var startScreenBottom: LinearLayout
     private lateinit var exerciseScreenBottom: LinearLayout
 
+    private lateinit var leaderboardScreen: LinearLayout
+    private lateinit var leaderboard: TextView
+    private lateinit var streakView: ListView
+
     private var checkExercise: Boolean = false
     private lateinit var currentMessage: String
 
     private lateinit var homepage: HomePage
+    private lateinit var leadadapt : Adapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -49,9 +58,9 @@ class MainActivity : AppCompatActivity() {
         buildViewByCode()
     }
 
-    fun animateBear(){
-        if (homepage.currentlyExercising()){
-            if (!checkExercise){
+    fun animateBear() {
+        if (homepage.currentlyExercising()) {
+            if (!checkExercise) {
                 bearIcon.setBackgroundResource(R.drawable.dumbbell_bear)
             } else {
                 bearIcon.setBackgroundResource(R.drawable.dumbbell_bear_up)
@@ -63,7 +72,10 @@ class MainActivity : AppCompatActivity() {
         checkExercise = !checkExercise
     }
 
-    fun buildViewByCode(){
+    fun buildViewByCode() {
+        var firebase: FirebaseDatabase = FirebaseDatabase.getInstance()
+        var listener: DataListener = DataListener()
+
         setContentView(R.layout.activity_main)
 
         bearIcon = findViewById(R.id.bear)
@@ -79,6 +91,13 @@ class MainActivity : AppCompatActivity() {
         startScreenBottom = findViewById(R.id.bottomHalfStartScreen)
         exerciseScreenBottom = findViewById(R.id.bottomHalfWorkoutScreen)
 
+
+        leaderboardScreen = findViewById(R.id.leaderboardScreen)
+        leaderboard = findViewById(R.id.leaderboard)
+        streakView = findViewById(R.id.streakList)
+
+
+
         exerciseNumber = findViewById(R.id.exerciseQuestion)
         enterButton = findViewById(R.id.enterButton)
         exerciseInput = findViewById(R.id.exerciseInput)
@@ -92,28 +111,29 @@ class MainActivity : AppCompatActivity() {
 
         homepage = HomePage(this)
 
-        yesButton.setOnClickListener{clickYes()}
-        noButton.setOnClickListener{clickNo()}
-        enterButton.setOnClickListener{enterExercise()}
-        xButton.setOnClickListener{pressX()}
+        yesButton.setOnClickListener { clickYes() }
+        noButton.setOnClickListener { clickNo() }
+        enterButton.setOnClickListener { enterExercise() }
+        xButton.setOnClickListener { pressX() }
+        awardButton.setOnClickListener { pressAward() }
 
         var timer: Timer = Timer()
         var task: ExerciseTimerTask = ExerciseTimerTask(this)
         timer.schedule(task, 0, 700)
     }
 
-    fun clickYes(){
+    fun clickYes() {
         // the yes button will be reused so check the current prompt to determine what to do
         var currentPrompt = this.questionPrompt.text.toString()
 
-        if (currentPrompt == getString(R.string.start_message)){
+        if (currentPrompt == getString(R.string.start_message)) {
             startWorkout()
-        } else if (currentPrompt == getString(R.string.end_message)){
+        } else if (currentPrompt == getString(R.string.end_message)) {
             endExercise()
-        } else if (currentPrompt == getString(R.string.before_break_message)){
+        } else if (currentPrompt == getString(R.string.before_break_message)) {
             startBreak()
-        } else if (currentPrompt == getString(R.string.after_break_message)){
-            if (currentExercise.finishedExercise()){
+        } else if (currentPrompt == getString(R.string.after_break_message)) {
+            if (currentExercise.finishedExercise()) {
 //                currentExercise.resetSets() you can't reset it but idk if it's necessarily
                 startWorkout()
             } else {
@@ -124,7 +144,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun startWorkout(){
+    fun startWorkout() {
         homepage.endBreak()
         homepage.startExercise()
 
@@ -133,12 +153,13 @@ class MainActivity : AppCompatActivity() {
 
         startScreenBottom.visibility = View.GONE
         exerciseScreenBottom.visibility = View.VISIBLE
-        exerciseNumber.text = (getString(R.string.exercise_message) + homepage.getCurrentExerciseNumber())
+        exerciseNumber.text =
+            (getString(R.string.exercise_message) + homepage.getCurrentExerciseNumber())
         currentMessage = exerciseNumber.text.toString()
         homepage.incrementExerciseNumber()
     }
 
-    fun startBreak(){
+    fun startBreak() {
         homepage.endExercise()
         homepage.startBreak()
 
@@ -152,45 +173,45 @@ class MainActivity : AppCompatActivity() {
         // display the timer view
     }
 
-    fun clickNo(){
+    fun clickNo() {
         // the no button will be reused so check the current prompt to determine what to do
         var currentPrompt = this.questionPrompt.text.toString()
 
-        if (currentPrompt == getString(R.string.after_break_message)){
+        if (currentPrompt == getString(R.string.after_break_message)) {
             // rerun the timer
 
-        } else if (currentPrompt == getString(R.string.end_message)){
+        } else if (currentPrompt == getString(R.string.end_message)) {
             // go back to the most recent view
-            if (currentMessage == exerciseNumber.text.toString()){
+            if (currentMessage == exerciseNumber.text.toString()) {
                 // check if they were in the exercise screen
                 homepage.endBreak()
                 homepage.startExercise()
                 startScreenBottom.visibility = View.GONE
                 exerciseScreenBottom.visibility = View.VISIBLE
-            } else if (currentMessage == getString(R.string.start_message)){
+            } else if (currentMessage == getString(R.string.start_message)) {
                 questionPrompt.text = getString(R.string.start_message)
                 currentMessage = getString(R.string.start_message)
-            } else if (currentMessage == getString(R.string.before_break_message)){
+            } else if (currentMessage == getString(R.string.before_break_message)) {
                 homepage.endBreak()
                 homepage.startExercise()
                 questionPrompt.text = getString(R.string.before_break_message)
                 currentMessage = getString(R.string.before_break_message)
-            } else if (currentMessage == getString(R.string.after_break_message)){
+            } else if (currentMessage == getString(R.string.after_break_message)) {
                 questionPrompt.text = getString(R.string.after_break_message)
                 currentMessage = getString(R.string.after_break_message)
             }
         }
     }
 
-    fun enterExercise(){
+    fun enterExercise() {
 
         var exerciseType: String = exerciseInput.text.toString()
 
-        if (exerciseType == ""){
+        if (exerciseType == "") {
             exerciseInput.hint = "Please enter an exercise!"
-        } else if (setInput.text.toString() == ""){
+        } else if (setInput.text.toString() == "") {
             exerciseNumber.text = "Please enter sets!"
-        } else if (repInput.text.toString() == ""){
+        } else if (repInput.text.toString() == "") {
             exerciseNumber.text = "Please enter reps!"
         } else {
             var sets: Int = setInput.text.toString().toInt()
@@ -206,7 +227,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun beforeBreakScreen(){
+    fun beforeBreakScreen() {
         homepage.endBreak()
         homepage.startExercise()
 
@@ -220,7 +241,7 @@ class MainActivity : AppCompatActivity() {
         currentMessage = getString(R.string.before_break_message)
     }
 
-    fun pressX(){
+    fun pressX() {
         homepage.endExercise()
         homepage.endBreak()
 
@@ -229,10 +250,31 @@ class MainActivity : AppCompatActivity() {
 
         startScreenBottom.visibility = View.VISIBLE
         exerciseScreenBottom.visibility = View.GONE
+        leaderboardScreen.visibility = View.GONE
+        yesButton.visibility = View.VISIBLE
+        noButton.visibility = View.VISIBLE
         questionPrompt.text = getString(R.string.end_message)
     }
 
-    fun endExercise(){
+    fun pressAward() {
+        streakView.adapter = Adapter(this, getStreakData())
+        homepage.endExercise()
+        homepage.endBreak()
+
+        leaderboardScreen.visibility = View.VISIBLE
+
+        motivationMessage.visibility = View.GONE
+        startScreenBottom.visibility = View.GONE
+        exerciseScreenBottom.visibility = View.GONE
+        yesButton.visibility = View.GONE
+        noButton.visibility = View.GONE
+
+
+
+    }
+
+
+    fun endExercise() {
 //        motivationSpacer.visibility = View.VISIBLE
         motivationMessage.visibility = View.GONE
 
@@ -244,6 +286,39 @@ class MainActivity : AppCompatActivity() {
         homepage.clearArrayList()
     }
 
+    inner class DataListener : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            if (snapshot.value != null) {
+                Log.w("MainActivity", "new value is " + snapshot.value.toString())
+            }
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            Log.w("MainActivity", "error")
+        }
+    }
+
+
+    //testing class
+    data class User(
+        val name: String,
+        val streakDays: Int
+    ) {
+        companion object {
+            val sortByStreak: Comparator<User> = compareByDescending { it.streakDays }
+        }
+    }
+
+    // test set
+    private fun getStreakData(): List<User> {
+        return listOf(
+            User("Eli", 12),
+            User("Tiffany", 8),
+            User("Ryan", 5),
+            User("Grace", 22),
+            User("You", 0)
+        ).sortedWith(User.sortByStreak) // sort highest
+    }
 }
 
 

@@ -56,7 +56,6 @@
         </LinearLayout>
 
 
-
         <!-- Options Bar (right side) -->
         <LinearLayout
             android:id="@+id/optionsBar"
@@ -177,8 +176,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
 
 <!--    exercise screen-->
     <LinearLayout
@@ -327,6 +324,40 @@
 
         </LinearLayout>
 
+    </LinearLayout>
+
+    <!-- leaderboard screen -->
+    <LinearLayout
+        android:id="@+id/leaderboardScreen"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="#E5D3A7"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/leaderboard"
+            android:layout_width="300dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="50dp"
+            android:layout_weight="0.333"
+            android:gravity="center"
+            android:text="@string/leaderboard_message"
+            android:textColor="@color/black"
+            android:textSize="32sp"
+            android:padding="10dp"
+            android:background="@drawable/blue_textbox" />
+
+        <ListView
+            android:id="@+id/streakList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="#EBE8E2" />
     </LinearLayout>
 
 
