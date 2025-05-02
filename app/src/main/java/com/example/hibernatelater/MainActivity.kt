@@ -14,6 +14,8 @@ import androidx.core.view.WindowInsetsCompat
 import java.util.Timer
 
 class MainActivity : AppCompatActivity() {
+
+
     private lateinit var bearIcon: View
     private lateinit var yesButton: AppCompatButton
     private lateinit var noButton: AppCompatButton
@@ -113,13 +115,12 @@ class MainActivity : AppCompatActivity() {
         } else if (currentPrompt == getString(R.string.before_break_message)){
             startBreak()
         } else if (currentPrompt == getString(R.string.after_break_message)){
-            if (currentExercise.finishedExercise()){
-//                currentExercise.resetSets() you can't reset it but idk if it's necessarily
-                startWorkout()
-            } else {
-                currentExercise.incrementSet()
-                beforeBreakScreen()
-            }
+            currentExercise.incrementSet()
+            beforeBreakScreen()
+
+        } else if (currentPrompt == getString(R.string.after_break_message2)){
+            //                currentExercise.resetSets() you can't reset it but idk if it's necessarily
+            startWorkout()
         }
 
     }
@@ -146,8 +147,13 @@ class MainActivity : AppCompatActivity() {
         motivationMessage.visibility = View.GONE
 
         // for testing purposes DELETE THIS
-        questionPrompt.text = getString(R.string.after_break_message)
-        currentMessage = getString(R.string.after_break_message)
+        if (currentExercise.finishedExercise()){
+            questionPrompt.text = getString(R.string.after_break_message2)
+            currentMessage = getString(R.string.after_break_message2)
+        } else {
+            questionPrompt.text = getString(R.string.after_break_message)
+            currentMessage = getString(R.string.after_break_message)
+        }
 
         // display the timer view
     }
@@ -168,14 +174,18 @@ class MainActivity : AppCompatActivity() {
                 startScreenBottom.visibility = View.GONE
                 exerciseScreenBottom.visibility = View.VISIBLE
             } else if (currentMessage == getString(R.string.start_message)){
+
                 questionPrompt.text = getString(R.string.start_message)
                 currentMessage = getString(R.string.start_message)
             } else if (currentMessage == getString(R.string.before_break_message)){
+
                 homepage.endBreak()
                 homepage.startExercise()
                 questionPrompt.text = getString(R.string.before_break_message)
                 currentMessage = getString(R.string.before_break_message)
-            } else if (currentMessage == getString(R.string.after_break_message)){
+            } else if (currentMessage == getString(R.string.after_break_message) ||
+                currentMessage == getString(R.string.after_break_message2)){
+
                 questionPrompt.text = getString(R.string.after_break_message)
                 currentMessage = getString(R.string.after_break_message)
             }
@@ -214,6 +224,11 @@ class MainActivity : AppCompatActivity() {
         exerciseScreenBottom.visibility = View.GONE
 
 //        motivationSpacer.visibility = View.GONE
+        motivationMessage.text =
+            getString(R.string.motivation_message) + "\n" +
+                    "Set " + currentExercise.getCurrentSet() + ": " +
+                    currentExercise.getReps() + " rep(s)" +
+                    " of " + currentExercise.getExerciseType() + "!"
         motivationMessage.visibility = View.VISIBLE
 
         questionPrompt.text = getString(R.string.before_break_message)
