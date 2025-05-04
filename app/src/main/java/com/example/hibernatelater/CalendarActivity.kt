@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.Gravity
 import android.widget.CalendarView
 import android.widget.CalendarView.OnDateChangeListener
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RatingBar
 import android.widget.TextView
@@ -23,9 +24,11 @@ import com.google.android.gms.ads.AdView
 class CalendarActivity  : AppCompatActivity()  {
     private lateinit var calendar : CalendarView
     private lateinit var dateInfo : TextView
+    private lateinit var starInfo : LinearLayout
     private lateinit var adView: AdView
     private lateinit var adViewLL: LinearLayout
     private lateinit var backButton : AppCompatButton
+    private lateinit var journal : AppCompatButton
     private var adUnitId : String = "ca-app-pub-3940256099942544/6300978111"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,11 +39,15 @@ class CalendarActivity  : AppCompatActivity()  {
     private fun buildViewByCode() {
         calendar = findViewById(R.id.calendar)
         dateInfo = findViewById(R.id.date_info)
+        starInfo = findViewById(R.id.star_info)
         var dateChangeListener = DateChangeListener()
         calendar.setOnDateChangeListener(dateChangeListener)
 
         backButton = findViewById(R.id.back_button)
         backButton.setOnClickListener{goBack()}
+
+        journal = findViewById(R.id.journal_icon)
+        journal.setOnClickListener{goToJournal()}
 
         adView = AdView(this)
         var adSize = AdSize(AdSize.FULL_WIDTH, AdSize.AUTO_HEIGHT)
@@ -57,6 +64,10 @@ class CalendarActivity  : AppCompatActivity()  {
 
         // request ad from google
         adView.loadAd(request)
+    }
+
+    private fun goToJournal() {
+//        TODO("Not yet implemented")
     }
 
     private fun goBack() {
@@ -91,11 +102,25 @@ class CalendarActivity  : AppCompatActivity()  {
             alertDialogBuilder.setView(ll).setPositiveButton("") {_, _ ->
                 var rating = ratingBar.rating
                 updateInfoView(rating, year, month + 1, dayOfMonth)
+                updateStars(rating)
             }
             alertDialogBuilder.setPositiveButtonIcon(enterButton)
             alertDialogBuilder.setNegativeButton("", null)
             alertDialogBuilder.setNegativeButtonIcon(noButton)
             alertDialogBuilder.show()
+        }
+
+        private fun updateStars(rating: Float) {
+            var starId = STARS[rating.toInt() - 1]
+            starInfo.removeAllViews()
+            for (i in 0..<rating.toInt()){
+                val imageView = ImageView(this@CalendarActivity)
+                imageView.setImageResource(starId)
+                val params = LinearLayout.LayoutParams(200, 200)
+//                params.setMargins(8, 0, 8, 0)
+                imageView.layoutParams = params
+                starInfo.addView(imageView)
+            }
         }
 
         private fun updateInfoView(rating: Float, year: Int, month: Int, dayOfMonth: Int) {
@@ -112,6 +137,10 @@ class CalendarActivity  : AppCompatActivity()  {
             Color.parseColor("#ffe234"),
             Color.parseColor("#b7dd29"),
             Color.parseColor("#57e32c"))
+        private var STARS = arrayOf(R.drawable.red_star, R.drawable.orange_star,
+            R.drawable.yellow_star,
+            R.drawable.light_green_star,
+            R.drawable.green_star)
     }
 
 }
