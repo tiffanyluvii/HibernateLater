@@ -1,5 +1,6 @@
 package com.example.hibernatelater
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,43 +15,44 @@ import androidx.core.view.WindowInsetsCompat
 import java.util.Timer
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var bearIcon: View
-    private lateinit var yesButton: AppCompatButton
-    private lateinit var noButton: AppCompatButton
-    private lateinit var questionPrompt: TextView
-    private lateinit var xButton: AppCompatButton
-    private lateinit var awardButton: AppCompatButton
-    private lateinit var journalButton: AppCompatButton
-    private lateinit var calendarButton: AppCompatButton
-    private lateinit var exerciseNumber: TextView
-    private lateinit var enterButton: AppCompatButton
-    private lateinit var motivationSpacer: View
-    private lateinit var motivationMessage: TextView
+    private lateinit var bearIcon : View
+    private lateinit var yesButton : AppCompatButton
+    private lateinit var noButton : AppCompatButton
+    private lateinit var questionPrompt : TextView
+    private lateinit var xButton : AppCompatButton
+    private lateinit var awardButton : AppCompatButton
+    private lateinit var journalButton : AppCompatButton
+    private lateinit var calendarButton : AppCompatButton
+    private lateinit var exerciseNumber : TextView
+    private lateinit var enterButton : AppCompatButton
+    private lateinit var motivationSpacer : View
+    private lateinit var motivationMessage : TextView
 
-    private lateinit var exerciseInput: EditText
-    private lateinit var setInput: EditText
-    private lateinit var repInput: EditText
+    private lateinit var exerciseInput : EditText
+    private lateinit var setInput : EditText
+    private lateinit var repInput : EditText
 
-    private lateinit var currentExercise: Exercise
+    private lateinit var currentExercise : Exercise
 
-    private lateinit var startScreenBottom: LinearLayout
-    private lateinit var exerciseScreenBottom: LinearLayout
+    private lateinit var startScreenBottom : LinearLayout
+    private lateinit var exerciseScreenBottom : LinearLayout
 
-    private var checkExercise: Boolean = false
-    private lateinit var currentMessage: String
+    private var checkExercise : Boolean = false
+    private lateinit var currentMessage : String
 
-    private lateinit var homepage: HomePage
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private lateinit var homepage : HomePage
+
+    override fun onCreate(savedInstanceState : Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
+    override fun onWindowFocusChanged(hasFocus : Boolean) {
         super.onWindowFocusChanged(hasFocus)
         buildViewByCode()
     }
 
     fun animateBear(){
-        if (homepage.currentlyExercising()){
+        if ( homepage.currentlyExercising() ){
             if (!checkExercise){
                 bearIcon.setBackgroundResource(R.drawable.dumbbell_bear)
             } else {
@@ -96,6 +98,7 @@ class MainActivity : AppCompatActivity() {
         noButton.setOnClickListener{clickNo()}
         enterButton.setOnClickListener{enterExercise()}
         xButton.setOnClickListener{pressX()}
+        journalButton.setOnClickListener{displayJournal()}
 
         var timer: Timer = Timer()
         var task: ExerciseTimerTask = ExerciseTimerTask(this)
@@ -242,6 +245,12 @@ class MainActivity : AppCompatActivity() {
         homepage.resetExerciseNumber()
         // make sure to append the exercise into the journal
         homepage.clearArrayList()
+    }
+
+    // go to the journal view
+    fun displayJournal() {
+        val intent = Intent(this, JournalActivity::class.java)
+        startActivity(intent)
     }
 
 }
