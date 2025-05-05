@@ -55,8 +55,4 @@ class HomePage {
     fun clearArrayList(){
         this.listOfExercises.clear()
     }
-
-
-
-
 }
