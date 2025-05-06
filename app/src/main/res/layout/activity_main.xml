@@ -56,6 +56,7 @@
         </LinearLayout>
 
 
+
         <!-- Options Bar (right side) -->
         <LinearLayout
             android:id="@+id/optionsBar"
@@ -176,6 +177,8 @@
         </LinearLayout>
 
     </LinearLayout>
+
+
 
 <!--    exercise screen-->
     <LinearLayout

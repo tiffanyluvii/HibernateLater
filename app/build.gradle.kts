@@ -48,4 +48,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    // added by RE
+    implementation("com.google.android.gms:play-services-ads:23.5.0")
 }
