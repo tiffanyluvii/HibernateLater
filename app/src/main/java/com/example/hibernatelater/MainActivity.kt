@@ -166,21 +166,21 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
     }
 
-    fun clickYes(){
+    fun clickYes() {
         // the yes button will be reused so check the current prompt to determine what to do
         var currentPrompt = this.questionPrompt.text.toString()
 
-        if (currentPrompt == getString(R.string.start_message)){
+        if (currentPrompt == getString(R.string.start_message)) {
             startWorkout()
-        } else if (currentPrompt == getString(R.string.end_message)){
+        } else if (currentPrompt == getString(R.string.end_message)) {
             endExercise()
-        } else if (currentPrompt == getString(R.string.before_break_message)){
+        } else if (currentPrompt == getString(R.string.before_break_message)) {
             startBreak()
-        } else if (currentPrompt == getString(R.string.after_break_message)){
+        } else if (currentPrompt == getString(R.string.after_break_message)) {
             currentExercise.incrementSet()
             beforeBreakScreen()
 
-        } else if (currentPrompt == getString(R.string.after_break_message2)){
+        } else if (currentPrompt == getString(R.string.after_break_message2)) {
             //                currentExercise.resetSets() you can't reset it but idk if it's necessarily
             startWorkout()
         }
