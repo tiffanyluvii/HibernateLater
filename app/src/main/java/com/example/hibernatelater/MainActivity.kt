@@ -14,6 +14,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import com.google.firebase.database.DataSnapshot
@@ -148,12 +149,14 @@ class MainActivity : AppCompatActivity() {
         homepage = HomePage(this)
 
         player = MediaPlayer.create(this, R.raw.alarm)
+
         yesButton.setOnClickListener{clickYes()}
         noButton.setOnClickListener{clickNo()}
         enterButton.setOnClickListener{enterExercise()}
         enterTimerButton.setOnClickListener{enterTimer()}
         xButton.setOnClickListener{pressX()}
         awardButton.setOnClickListener { pressAward() }
+        journalButton.setOnClickListener{ displayJournal() }
 
 
         var timer: Timer = Timer()
@@ -166,25 +169,24 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
     }
 
-    fun clickYes() {
+    fun clickYes(){
         // the yes button will be reused so check the current prompt to determine what to do
         var currentPrompt = this.questionPrompt.text.toString()
 
-        if (currentPrompt == getString(R.string.start_message)) {
+        if (currentPrompt == getString(R.string.start_message)){
             startWorkout()
-        } else if (currentPrompt == getString(R.string.end_message)) {
+        } else if (currentPrompt == getString(R.string.end_message)){
             endExercise()
-        } else if (currentPrompt == getString(R.string.before_break_message)) {
+        } else if (currentPrompt == getString(R.string.before_break_message)){
             startBreak()
-        } else if (currentPrompt == getString(R.string.after_break_message)) {
+        } else if (currentPrompt == getString(R.string.after_break_message)){
             currentExercise.incrementSet()
             beforeBreakScreen()
 
-        } else if (currentPrompt == getString(R.string.after_break_message2)) {
+        } else if (currentPrompt == getString(R.string.after_break_message2)){
             //                currentExercise.resetSets() you can't reset it but idk if it's necessarily
             startWorkout()
         }
-
 
     }
 
@@ -390,6 +392,11 @@ class MainActivity : AppCompatActivity() {
         homepage.clearArrayList()
     }
 
+    fun displayJournal() {
+        val intent = Intent(this, JournalActivity::class.java)
+        startActivity(intent)
+    }
+
 
     fun runTimer(millisUntilFinished: Long){
         var breakTimer: BreakTimer = BreakTimer(millisUntilFinished, 1000)
@@ -447,6 +454,7 @@ class MainActivity : AppCompatActivity() {
             User("You", 0)
         ).sortedWith(User.sortByStreak) // sort highest
     }
+
 }
 
 
