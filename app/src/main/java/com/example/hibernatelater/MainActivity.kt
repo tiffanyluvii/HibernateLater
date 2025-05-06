@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             }
         } else if (homepage.currentlyOnBreak()){
             if (checkBreak == 0){
-                bearIcon.setBackgroundResource(R.drawable.regular_bear)
+                bearIcon.setBackgroundResource(R.drawable.sleeping_bear4)
             } else if (checkBreak == 1){
                 bearIcon.setBackgroundResource(R.drawable.sleeping_bear)
             } else if (checkBreak == 2){
@@ -347,6 +347,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun pressX(){
+        if (leaderboardScreen.visibility == View.VISIBLE){
+            questionPrompt.text = getString(R.string.start_message)
+            currentMessage = getString(R.string.start_message)
+        } else {
+            questionPrompt.text = getString(R.string.end_message)
+            currentMessage = getString(R.string.end_message)
+        }
+
         homepage.endExercise()
         homepage.endBreak()
 
@@ -359,7 +367,6 @@ class MainActivity : AppCompatActivity() {
         leaderboardScreen.visibility = View.GONE
         yesButton.visibility = View.VISIBLE
         noButton.visibility = View.VISIBLE
-        questionPrompt.text = getString(R.string.end_message)
     }
 
     fun pressAward() {
