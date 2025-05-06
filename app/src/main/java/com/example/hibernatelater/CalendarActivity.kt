@@ -14,11 +14,19 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 
 class CalendarActivity  : AppCompatActivity()  {
     private lateinit var calendar : CalendarView
     private lateinit var dateInfo : TextView
+    private lateinit var adView: AdView
+    private lateinit var adViewLL: LinearLayout
+    private lateinit var backButton : AppCompatButton
+    private var adUnitId : String = "ca-app-pub-3940256099942544/6300978111"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
@@ -30,6 +38,30 @@ class CalendarActivity  : AppCompatActivity()  {
         dateInfo = findViewById(R.id.date_info)
         var dateChangeListener = DateChangeListener()
         calendar.setOnDateChangeListener(dateChangeListener)
+
+        backButton = findViewById(R.id.back_button)
+        backButton.setOnClickListener{goBack()}
+
+        adView = AdView(this)
+        var adSize = AdSize(AdSize.FULL_WIDTH, AdSize.AUTO_HEIGHT)
+        adView.setAdSize(adSize)
+        adView.adUnitId = adUnitId
+
+        // create ad request
+        var builder : AdRequest.Builder = AdRequest.Builder()
+        var request : AdRequest = builder.build()
+
+        // place adView in LinearLayout
+        var adLayout : LinearLayout = findViewById(R.id.ad_view_ll)
+        adLayout.addView(adView)
+
+        // request ad from google
+        adView.loadAd(request)
+    }
+
+    private fun goBack() {
+        this.finishAfterTransition()
+        finish()
     }
 
 
@@ -75,11 +107,11 @@ class CalendarActivity  : AppCompatActivity()  {
 
     }
     companion object {
-        private var COLORS : Array<Int> = arrayOf(Color.parseColor("#57e32c"),
-            Color.parseColor("#b7dd29"),
-            Color.parseColor("#ffe234"),
+        private var COLORS : Array<Int> = arrayOf(Color.parseColor("#ff4545"),
             Color.parseColor("#ffa534"),
-            Color.parseColor("#ff4545"))
+            Color.parseColor("#ffe234"),
+            Color.parseColor("#b7dd29"),
+            Color.parseColor("#57e32c"))
     }
 
 }

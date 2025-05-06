@@ -1,5 +1,7 @@
 package com.example.hibernatelater
 
+import android.app.ActivityOptions
+import android.content.Intent
 import android.icu.text.DecimalFormat
 import android.icu.text.NumberFormat
 import android.media.MediaPlayer
@@ -104,6 +106,7 @@ class MainActivity : AppCompatActivity() {
         awardButton = findViewById(R.id.award_icon)
         journalButton = findViewById(R.id.journal_icon)
         calendarButton = findViewById(R.id.calendar_icon)
+        calendarButton.setOnClickListener{goToCalendar()}
 
         startScreenBottom = findViewById(R.id.bottomHalfStartScreen)
         exerciseScreenBottom = findViewById(R.id.bottomHalfWorkoutScreen)
@@ -139,6 +142,11 @@ class MainActivity : AppCompatActivity() {
         var timer: Timer = Timer()
         var task: ExerciseTimerTask = ExerciseTimerTask(this)
         timer.schedule(task, 0, 700)
+    }
+
+    private fun goToCalendar() {
+        var intent: Intent = Intent(this, CalendarActivity::class.java)
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
     }
 
     fun clickYes(){
