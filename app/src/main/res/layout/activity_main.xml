@@ -329,5 +329,163 @@
 
     </LinearLayout>
 
+    <!-- leaderboard screen -->
+    <LinearLayout
+        android:id="@+id/leaderboardScreen"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="#E5D3A7"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/leaderboard"
+            android:layout_width="300dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="50dp"
+            android:layout_weight="0.333"
+            android:gravity="center"
+            android:text="@string/leaderboard_message"
+            android:textColor="@color/black"
+            android:textSize="32sp"
+            android:padding="10dp"
+            android:background="@drawable/blue_textbox" />
+
+        <ListView
+            android:id="@+id/streakList"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="#EBE8E2" />
+    </LinearLayout>
+
+    <!--    timer screen-->
+    <LinearLayout
+        android:id="@+id/bottomHalfTimerScreen"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="#E5D3A7"
+        android:visibility="gone"
+        >
+        <!--        Put the timer in here-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/timer"
+                android:layout_width="350dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="70sp"
+                android:text="00:00"
+                android:textColor="@color/black"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/blue"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/timerInput"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
+                android:textColor="@color/black"
+                android:text="Min:"
+                android:textSize="30sp"
+                android:gravity="center"
+                />
+
+
+            <EditText
+                android:id="@+id/minuteInput"
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="28sp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:layout_marginLeft="10dp"
+                android:inputType="number"
+                android:background="@drawable/textbox"
+                />
+
+            <View
+                android:layout_width="25dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
+                android:textColor="@color/black"
+                android:text="Sec:"
+                android:textSize="30sp"
+                android:gravity="center"
+                />
+
+            <EditText
+                android:id="@+id/secondInput"
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="28sp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:layout_marginLeft="10dp"
+                android:inputType="number"
+                android:background="@drawable/textbox"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/enterTimerButton"
+                android:layout_width="250dp"
+                android:layout_height="200dp"
+                android:gravity="center"
+                android:textSize="28sp"
+                android:textColor="@color/black"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:background="@drawable/enter_button"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

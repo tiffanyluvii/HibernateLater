@@ -5,5 +5,8 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.HibernateLater" parent="Base.Theme.HibernateLater" />
+    <style name="Theme.HibernateLater" parent="Base.Theme.HibernateLater">
+        <item name="android:windowEnterTransition">@transition/slide_from_right</item>
+        <item name="android:windowExitTransition">@transition/slide_from_left</item>
+    </style>
 </resources>
