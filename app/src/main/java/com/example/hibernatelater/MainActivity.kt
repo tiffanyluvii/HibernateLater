@@ -156,6 +156,7 @@ class MainActivity : AppCompatActivity() {
         enterTimerButton.setOnClickListener{enterTimer()}
         xButton.setOnClickListener{pressX()}
         awardButton.setOnClickListener { pressAward() }
+        journalButton.setOnClickListener{ displayJournal() }
 
 
         var timer: Timer = Timer()
@@ -389,6 +390,11 @@ class MainActivity : AppCompatActivity() {
         homepage.resetExerciseNumber()
         // make sure to append the exercise into the journal
         homepage.clearArrayList()
+    }
+
+    fun displayJournal() {
+        val intent = Intent(this, JournalActivity::class.java)
+        startActivity(intent)
     }
 
 
