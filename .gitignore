@@ -15,4 +15,4 @@
 
 # # Project exclude paths
 # /app/
-# /gradle/
+# /gradle/.gradle/
