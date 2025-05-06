@@ -139,6 +139,7 @@ class MainActivity : AppCompatActivity() {
         xButton.setOnClickListener{pressX()}
 
 
+
         var timer: Timer = Timer()
         var task: ExerciseTimerTask = ExerciseTimerTask(this)
         timer.schedule(task, 0, 700)
@@ -374,6 +375,7 @@ class MainActivity : AppCompatActivity() {
             timerEnded()
         }
     }
+
 
 }
 
