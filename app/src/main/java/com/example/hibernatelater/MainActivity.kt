@@ -448,6 +448,7 @@ class MainActivity : AppCompatActivity() {
             User("You", 0)
         ).sortedWith(User.sortByStreak) // sort highest
     }
+
 }
 
 

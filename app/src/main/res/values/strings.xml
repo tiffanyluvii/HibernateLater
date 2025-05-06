@@ -9,4 +9,16 @@
     <string name="motivation_message">YOU GOT THIS!</string>
     <string name="leaderboard_message">LEADERBOARD</string>
     <string name="streak_message">STREAK: </string>
+
+    <string name="test_string">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a purus facilisis, porta libero commodo, consequat tellus. Vivamus bibendum sagittis ligula placerat gravida. Quisque consectetur id enim in sollicitudin. Mauris convallis libero erat, a sodales libero semper sit amet. Proin commodo ut leo vel rutrum. Maecenas tincidunt felis id leo lobortis consequat. Nulla vestibulum augue risus, vel facilisis tellus accumsan vitae. In faucibus ut lacus vel pretium. Cras auctor posuere erat, ut lacinia libero consectetur vestibulum. Quisque interdum lacinia porta. Etiam congue scelerisque dui, venenatis tristique enim porta et.
+
+Mauris aliquam mauris et tincidunt commodo. Sed mattis porttitor mauris, id laoreet sapien hendrerit in. Pellentesque aliquam ex ipsum, ac sagittis lectus sagittis semper. Morbi quam orci, sagittis in feugiat in, fringilla non turpis. Praesent sed arcu orci. Curabitur eleifend dictum ante et auctor. Nullam tincidunt condimentum congue.
+
+Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Fusce tempus egestas tempor. Phasellus posuere placerat ipsum, ac imperdiet purus sagittis in. Quisque vulputate ex ac lacus vestibulum cursus. Ut lectus libero, aliquet in arcu at, congue consequat diam. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Quisque nisl nisl, vehicula sed libero et, suscipit ultrices mauris. Interdum et malesuada fames ac ante ipsum primis in faucibus. Ut consectetur fringilla purus eget molestie. Integer ac sapien vitae dui malesuada convallis. Fusce eget sapien metus. Duis sed nisi vel massa bibendum rhoncus eget at velit. Nulla porta neque vel mi ullamcorper consequat. Pellentesque lorem neque, ornare in sapien at, fermentum facilisis magna.
+
+Morbi porta varius nisl, in pulvinar nibh viverra at. Proin rutrum nisi vitae elit elementum tristique. Vestibulum nec malesuada erat, pulvinar laoreet arcu. Ut vitae ex diam. Sed varius dui sit amet odio molestie porta. Morbi sit amet odio quis dui egestas pharetra. Vivamus sed lectus velit. Phasellus ut augue ligula. Maecenas at nisi purus.
+
+Nam pellentesque suscipit turpis, eget ullamcorper mi. Nullam viverra mi et velit cursus, laoreet facilisis arcu feugiat. Donec metus lorem, ultricies in vehicula non, dictum at sapien. Maecenas eget rutrum ligula, vitae iaculis felis. Nunc at commodo dui. Sed eu pretium sem. Nullam ac rhoncus diam, in aliquam enim. In sagittis leo lobortis sem dictum ultricies. Donec vestibulum luctus sapien. Sed ac arcu tellus. Nam ultricies mauris vel leo rutrum pellentesque. Aenean sit amet lobortis tellus, at malesuada arcu. Integer pretium malesuada turpis condimentum egestas. Fusce consectetur faucibus quam in facilisis.
+    </string>
 </resources>
