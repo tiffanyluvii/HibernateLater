@@ -51,7 +51,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var player: MediaPlayer
 
     private var checkExercise: Boolean = false
+    private var checkBreak: Int = 0
     private var checkTimer: Boolean = false
+    private var checkTimerView: Boolean = false
     private lateinit var currentMessage: String
 
     private lateinit var homepage: HomePage
@@ -71,11 +73,23 @@ class MainActivity : AppCompatActivity() {
             } else {
                 bearIcon.setBackgroundResource(R.drawable.dumbbell_bear_up)
             }
+        } else if (homepage.currentlyOnBreak()){
+            if (checkBreak == 0){
+                bearIcon.setBackgroundResource(R.drawable.regular_bear)
+            } else if (checkBreak == 1){
+                bearIcon.setBackgroundResource(R.drawable.sleeping_bear)
+            } else if (checkBreak == 2){
+                bearIcon.setBackgroundResource(R.drawable.sleeping_bear2)
+            } else if (checkBreak == 3){
+                bearIcon.setBackgroundResource(R.drawable.sleeping_bear3)
+            }
+            checkBreak++
         } else {
             // change this to a sleeping bear later
             bearIcon.setBackgroundResource(R.drawable.regular_bear)
         }
         checkExercise = !checkExercise
+        checkBreak %= 4
     }
 
     fun buildViewByCode(){
@@ -119,6 +133,8 @@ class MainActivity : AppCompatActivity() {
         noButton.setOnClickListener{clickNo()}
         enterButton.setOnClickListener{enterExercise()}
         enterTimerButton.setOnClickListener{enterTimer()}
+        xButton.setOnClickListener{pressX()}
+
 
         var timer: Timer = Timer()
         var task: ExerciseTimerTask = ExerciseTimerTask(this)
@@ -156,23 +172,34 @@ class MainActivity : AppCompatActivity() {
             startBreak()
 
         } else if (currentPrompt == getString(R.string.end_message)){
+            // add one for the timer view
+
             // go back to the most recent view
-            if (currentMessage == exerciseNumber.text.toString()){
+            if (checkTimerView){
+                Log.w("MainActivity", "checkTimerView")
+                checkTimerView = true
+                homepage.startBreak()
+                startScreenBottom.visibility = View.GONE
+                timerScreenBottom.visibility = View.VISIBLE
+
+            } else if (currentMessage == exerciseNumber.text.toString()){
                 // check if they were in the exercise screen
                 homepage.endBreak()
                 homepage.startExercise()
                 startScreenBottom.visibility = View.GONE
                 exerciseScreenBottom.visibility = View.VISIBLE
             } else if (currentMessage == getString(R.string.start_message)){
-
                 questionPrompt.text = getString(R.string.start_message)
                 currentMessage = getString(R.string.start_message)
             } else if (currentMessage == getString(R.string.before_break_message)){
+
+                motivationMessage.visibility = View.VISIBLE
 
                 homepage.endBreak()
                 homepage.startExercise()
                 questionPrompt.text = getString(R.string.before_break_message)
                 currentMessage = getString(R.string.before_break_message)
+
             } else if (currentMessage == getString(R.string.after_break_message) ||
                 currentMessage == getString(R.string.after_break_message2)){
 
@@ -185,7 +212,6 @@ class MainActivity : AppCompatActivity() {
 
     fun startWorkout(){
         homepage.endBreak()
-        homepage.startExercise()
 
 //        motivationSpacer.visibility = View.VISIBLE
         motivationMessage.visibility = View.GONE
@@ -201,6 +227,8 @@ class MainActivity : AppCompatActivity() {
         homepage.endExercise()
         homepage.startBreak()
 
+        checkTimerView = true
+
 //        motivationSpacer.visibility = View.GONE
         motivationMessage.visibility = View.GONE
 
@@ -211,6 +239,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun timerEnded(){
+        homepage.endBreak()
+        checkTimerView = false
+
         timerScreenBottom.visibility = View.GONE
         startScreenBottom.visibility = View.VISIBLE
 
@@ -296,6 +327,7 @@ class MainActivity : AppCompatActivity() {
 
         startScreenBottom.visibility = View.VISIBLE
         exerciseScreenBottom.visibility = View.GONE
+        timerScreenBottom.visibility = View.GONE
         questionPrompt.text = getString(R.string.end_message)
     }
 
