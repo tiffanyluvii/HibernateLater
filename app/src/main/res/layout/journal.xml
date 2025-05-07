@@ -35,7 +35,8 @@
                 android:id="@+id/entriesLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:orientation="vertical"
+                android:paddingLeft="15dp"/>
         </ScrollView>
 
         <!-- Options bar -->
@@ -64,6 +65,18 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:background="@drawable/trash" />
+
+            <!-- Spacer -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/share_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/direct"
+                />
 
         </LinearLayout>
 
