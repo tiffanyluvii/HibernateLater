@@ -201,7 +201,8 @@ class MainActivity : AppCompatActivity() {
         // the no button will be reused so check the current prompt to determine what to do
         var currentPrompt = this.questionPrompt.text.toString()
 
-        if (currentPrompt == getString(R.string.after_break_message)){
+        if (currentPrompt == getString(R.string.after_break_message)
+            || currentPrompt == getString(R.string.after_break_message2)){
             // rerun the timer
             startBreak()
 
