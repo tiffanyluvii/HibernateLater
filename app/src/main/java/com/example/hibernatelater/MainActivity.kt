@@ -17,10 +17,15 @@ import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.Timer
 
 class MainActivity : AppCompatActivity() {
@@ -64,6 +69,7 @@ class MainActivity : AppCompatActivity() {
     private var checkTimer: Boolean = false
     private var checkTimerView: Boolean = false
     private lateinit var currentMessage: String
+
 
     private lateinit var homepage: HomePage
     private lateinit var leadadapt : Adapter
@@ -195,7 +201,8 @@ class MainActivity : AppCompatActivity() {
         // the no button will be reused so check the current prompt to determine what to do
         var currentPrompt = this.questionPrompt.text.toString()
 
-        if (currentPrompt == getString(R.string.after_break_message)){
+        if (currentPrompt == getString(R.string.after_break_message)
+            || currentPrompt == getString(R.string.after_break_message2)){
             // rerun the timer
             startBreak()
 
@@ -301,9 +308,34 @@ class MainActivity : AppCompatActivity() {
 
             homepage.addToList(currentExercise) // probably add it to the journal as well
 
+
+            // PERSISTENT DATA MANAGEMENT
+            val currentDate = SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(Date())
+
+            // Create an ExerciseEntity object with the data
+            val exercise = ExerciseEntity(
+                name = exerciseType,
+                sets = sets,
+                reps = reps,
+                date = currentDate
+            )
+
+            // Save the exercise in the database (Room)
+            val db = AppDatabase.getDatabase(this)
+            val dao = db.exerciseDao()
+
+            lifecycleScope.launch {
+                dao.insert(exercise)
+            }
+
+            // END OF PERSISTENT DATA CODE
+
             beforeBreakScreen()
         }
     }
+
+
+
 
     fun enterTimer(){
         var minute: Int = 0

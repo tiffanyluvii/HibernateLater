@@ -86,8 +86,8 @@ class CalendarActivity  : AppCompatActivity()  {
 
             var alertDialogBuilder : AlertDialog.Builder = AlertDialog.Builder(this@CalendarActivity)
             alertDialogBuilder.setTitle("Rate your workout on ${month+1}/$dayOfMonth/$year")
-            var enterButton : Drawable = ContextCompat.getDrawable(this@CalendarActivity, R.drawable.enter_button)
-            var noButton : Drawable = ContextCompat.getDrawable(this@CalendarActivity, R.drawable.no_button)
+            var enterButton : Drawable? = ContextCompat.getDrawable(this@CalendarActivity, R.drawable.enter_button)
+            var noButton : Drawable? = ContextCompat.getDrawable(this@CalendarActivity, R.drawable.no_button)
             alertDialogBuilder.setView(ll).setPositiveButton("") {_, _ ->
                 var rating = ratingBar.rating
                 updateInfoView(rating, year, month + 1, dayOfMonth)

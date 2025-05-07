@@ -13,9 +13,10 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/back_button"
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/no_button"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/back_button"
+            android:layout_marginLeft="10dp"
             />
     </LinearLayout>
 
