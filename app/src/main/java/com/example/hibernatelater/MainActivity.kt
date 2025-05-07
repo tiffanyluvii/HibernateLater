@@ -200,6 +200,7 @@ class MainActivity : AppCompatActivity() {
     fun clickNo(){
         // the no button will be reused so check the current prompt to determine what to do
         var currentPrompt = this.questionPrompt.text.toString()
+        Log.w("MainActivity", currentPrompt)
 
         if (currentPrompt == getString(R.string.after_break_message)
             || currentPrompt == getString(R.string.after_break_message2)){
@@ -208,16 +209,17 @@ class MainActivity : AppCompatActivity() {
 
         } else if (currentPrompt == getString(R.string.end_message)){
             // add one for the timer view
-
+            Log.w("MainActivity", currentMessage)
             // go back to the most recent view
             if (checkTimerView){
-                Log.w("MainActivity", "checkTimerView")
                 checkTimerView = true
                 homepage.startBreak()
                 startScreenBottom.visibility = View.GONE
                 timerScreenBottom.visibility = View.VISIBLE
 
             } else if (currentMessage == exerciseNumber.text.toString()){
+                Log.w("MainActivity", "clickedNo")
+
                 // check if they were in the exercise screen
                 homepage.endBreak()
                 homepage.startExercise()
@@ -235,11 +237,12 @@ class MainActivity : AppCompatActivity() {
                 questionPrompt.text = getString(R.string.before_break_message)
                 currentMessage = getString(R.string.before_break_message)
 
-            } else if (currentMessage == getString(R.string.after_break_message) ||
-                currentMessage == getString(R.string.after_break_message2)){
-
+            } else if (currentMessage == getString(R.string.after_break_message)){
                 questionPrompt.text = getString(R.string.after_break_message)
                 currentMessage = getString(R.string.after_break_message)
+            } else if (currentMessage == getString(R.string.after_break_message2)){
+                questionPrompt.text = getString(R.string.after_break_message2)
+                currentMessage = getString(R.string.after_break_message2)
             }
         }
     }
@@ -381,10 +384,10 @@ class MainActivity : AppCompatActivity() {
     fun pressX(){
         if (leaderboardScreen.visibility == View.VISIBLE){
             questionPrompt.text = getString(R.string.start_message)
-            currentMessage = getString(R.string.start_message)
+//            currentMessage = getString(R.string.start_message)
         } else {
             questionPrompt.text = getString(R.string.end_message)
-            currentMessage = getString(R.string.end_message)
+//            currentMessage = getString(R.string.end_message)
         }
 
         homepage.endExercise()
