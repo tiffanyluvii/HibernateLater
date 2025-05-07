@@ -309,7 +309,7 @@ class MainActivity : AppCompatActivity() {
 
 
             // PERSISTENT DATA MANAGEMENT
-            val currentDate = SimpleDateFormat("MM-dd-yyyy", Locale.getDefault()).format(Date())
+            val currentDate = SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(Date())
 
             // Create an ExerciseEntity object with the data
             val exercise = ExerciseEntity(

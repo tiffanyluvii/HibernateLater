@@ -1,6 +1,7 @@
 package com.example.hibernatelater
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.widget.Button
 import android.widget.LinearLayout
@@ -32,14 +33,26 @@ class JournalActivity : AppCompatActivity() {
             // Clear existing views
             entriesLayout.removeAllViews()
 
-            // Add each exercise as a new TextView
-            exercises.forEach { exercise ->
-                val textView = TextView(this)
-                textView.text = "${exercise.date} - ${exercise.name}\nSets: ${exercise.sets}, Reps: ${exercise.reps}"
-                textView.textSize = 18f
+            // Group exercises by date
+            val groupedByDate = exercises.groupBy { it.date }
 
-                // Add the new TextView to the top of the layout
-                entriesLayout.addView(textView, 0)
+            // Iterate over each date group in descending order (most recent date first)
+            groupedByDate.toSortedMap(compareByDescending { it }).forEach { (date, exerciseList) ->
+                // Add a date header
+                val dateTextView = TextView(this)
+                dateTextView.text = "$date"
+                dateTextView.textSize = 20f
+                dateTextView.setTypeface(null, Typeface.BOLD)
+                dateTextView.setPadding(0, 16, 0, 8)
+                entriesLayout.addView(dateTextView)
+
+                // Add all exercises under that date
+                exerciseList.forEach { exercise ->
+                    val exerciseTextView = TextView(this)
+                    exerciseTextView.text = "${exercise.name} - Sets: ${exercise.sets}, Reps: ${exercise.reps}"
+                    exerciseTextView.textSize = 16f
+                    entriesLayout.addView(exerciseTextView)
+                }
             }
         })
 
