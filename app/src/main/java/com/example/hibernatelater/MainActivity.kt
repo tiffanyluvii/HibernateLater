@@ -14,12 +14,18 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.Timer
 
 class MainActivity : AppCompatActivity() {
@@ -64,6 +70,7 @@ class MainActivity : AppCompatActivity() {
     private var checkTimerView: Boolean = false
     private lateinit var currentMessage: String
 
+
     private lateinit var homepage: HomePage
     private lateinit var leadadapt : Adapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +91,7 @@ class MainActivity : AppCompatActivity() {
             }
         } else if (homepage.currentlyOnBreak()){
             if (checkBreak == 0){
-                bearIcon.setBackgroundResource(R.drawable.regular_bear)
+                bearIcon.setBackgroundResource(R.drawable.sleeping_bear4)
             } else if (checkBreak == 1){
                 bearIcon.setBackgroundResource(R.drawable.sleeping_bear)
             } else if (checkBreak == 2){
@@ -148,12 +155,14 @@ class MainActivity : AppCompatActivity() {
         homepage = HomePage(this)
 
         player = MediaPlayer.create(this, R.raw.alarm)
+
         yesButton.setOnClickListener{clickYes()}
         noButton.setOnClickListener{clickNo()}
         enterButton.setOnClickListener{enterExercise()}
         enterTimerButton.setOnClickListener{enterTimer()}
         xButton.setOnClickListener{pressX()}
         awardButton.setOnClickListener { pressAward() }
+        journalButton.setOnClickListener{ displayJournal() }
 
 
         var timer: Timer = Timer()
@@ -166,25 +175,24 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle())
     }
 
-    fun clickYes() {
+    fun clickYes(){
         // the yes button will be reused so check the current prompt to determine what to do
         var currentPrompt = this.questionPrompt.text.toString()
 
-        if (currentPrompt == getString(R.string.start_message)) {
+        if (currentPrompt == getString(R.string.start_message)){
             startWorkout()
-        } else if (currentPrompt == getString(R.string.end_message)) {
+        } else if (currentPrompt == getString(R.string.end_message)){
             endExercise()
-        } else if (currentPrompt == getString(R.string.before_break_message)) {
+        } else if (currentPrompt == getString(R.string.before_break_message)){
             startBreak()
-        } else if (currentPrompt == getString(R.string.after_break_message)) {
+        } else if (currentPrompt == getString(R.string.after_break_message)){
             currentExercise.incrementSet()
             beforeBreakScreen()
 
-        } else if (currentPrompt == getString(R.string.after_break_message2)) {
+        } else if (currentPrompt == getString(R.string.after_break_message2)){
             //                currentExercise.resetSets() you can't reset it but idk if it's necessarily
             startWorkout()
         }
-
 
     }
 
@@ -192,23 +200,26 @@ class MainActivity : AppCompatActivity() {
     fun clickNo(){
         // the no button will be reused so check the current prompt to determine what to do
         var currentPrompt = this.questionPrompt.text.toString()
+        Log.w("MainActivity", currentPrompt)
 
-        if (currentPrompt == getString(R.string.after_break_message)){
+        if (currentPrompt == getString(R.string.after_break_message)
+            || currentPrompt == getString(R.string.after_break_message2)){
             // rerun the timer
             startBreak()
 
         } else if (currentPrompt == getString(R.string.end_message)){
             // add one for the timer view
-
+            Log.w("MainActivity", currentMessage)
             // go back to the most recent view
             if (checkTimerView){
-                Log.w("MainActivity", "checkTimerView")
                 checkTimerView = true
                 homepage.startBreak()
                 startScreenBottom.visibility = View.GONE
                 timerScreenBottom.visibility = View.VISIBLE
 
             } else if (currentMessage == exerciseNumber.text.toString()){
+                Log.w("MainActivity", "clickedNo")
+
                 // check if they were in the exercise screen
                 homepage.endBreak()
                 homepage.startExercise()
@@ -226,11 +237,12 @@ class MainActivity : AppCompatActivity() {
                 questionPrompt.text = getString(R.string.before_break_message)
                 currentMessage = getString(R.string.before_break_message)
 
-            } else if (currentMessage == getString(R.string.after_break_message) ||
-                currentMessage == getString(R.string.after_break_message2)){
-
+            } else if (currentMessage == getString(R.string.after_break_message)){
                 questionPrompt.text = getString(R.string.after_break_message)
                 currentMessage = getString(R.string.after_break_message)
+            } else if (currentMessage == getString(R.string.after_break_message2)){
+                questionPrompt.text = getString(R.string.after_break_message2)
+                currentMessage = getString(R.string.after_break_message2)
             }
         }
     }
@@ -299,9 +311,34 @@ class MainActivity : AppCompatActivity() {
 
             homepage.addToList(currentExercise) // probably add it to the journal as well
 
+
+            // PERSISTENT DATA MANAGEMENT
+            val currentDate = SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(Date())
+
+            // Create an ExerciseEntity object with the data
+            val exercise = ExerciseEntity(
+                name = exerciseType,
+                sets = sets,
+                reps = reps,
+                date = currentDate
+            )
+
+            // Save the exercise in the database (Room)
+            val db = AppDatabase.getDatabase(this)
+            val dao = db.exerciseDao()
+
+            lifecycleScope.launch {
+                dao.insert(exercise)
+            }
+
+            // END OF PERSISTENT DATA CODE
+
             beforeBreakScreen()
         }
     }
+
+
+
 
     fun enterTimer(){
         var minute: Int = 0
@@ -345,6 +382,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun pressX(){
+        if (leaderboardScreen.visibility == View.VISIBLE){
+            questionPrompt.text = getString(R.string.start_message)
+//            currentMessage = getString(R.string.start_message)
+        } else {
+            questionPrompt.text = getString(R.string.end_message)
+//            currentMessage = getString(R.string.end_message)
+        }
+
         homepage.endExercise()
         homepage.endBreak()
 
@@ -357,7 +402,6 @@ class MainActivity : AppCompatActivity() {
         leaderboardScreen.visibility = View.GONE
         yesButton.visibility = View.VISIBLE
         noButton.visibility = View.VISIBLE
-        questionPrompt.text = getString(R.string.end_message)
     }
 
     fun pressAward() {
@@ -388,6 +432,11 @@ class MainActivity : AppCompatActivity() {
         homepage.resetExerciseNumber()
         // make sure to append the exercise into the journal
         homepage.clearArrayList()
+    }
+
+    fun displayJournal() {
+        val intent = Intent(this, JournalActivity::class.java)
+        startActivity(intent)
     }
 
 
@@ -447,6 +496,7 @@ class MainActivity : AppCompatActivity() {
             User("You", 0)
         ).sortedWith(User.sortByStreak) // sort highest
     }
+
 }
 
 
