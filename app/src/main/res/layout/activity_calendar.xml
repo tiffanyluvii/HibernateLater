@@ -67,9 +67,11 @@
                         android:textSize = "30dp"/>
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/change_rating_button"
-                        android:layout_width="90dp"
-                        android:layout_height="90dp"
-                        android:background="@drawable/journal_icon"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/edit_icon"
                         android:layout_gravity="center_vertical"
                         />
                 </LinearLayout>

@@ -70,7 +70,7 @@ class CalendarActivity  : AppCompatActivity()  {
         journal.setOnClickListener{goToJournal()}
 
         // load up rating on start after everything is loaded in
-        val defaultRating = pref.getFloat("$selectedYear, ${selectedMonth+1}, $selectedDay", 0F)
+        val defaultRating = pref.getFloat("$selectedYear, ${selectedMonth+1}, $selectedDay", -1F)
         updateInfoView(defaultRating, selectedYear, selectedMonth, selectedDay)
         updateStars(defaultRating)
         Log.w("CalendarActivity", "selecteds: $selectedYear, $selectedMonth, $selectedDay")
@@ -108,7 +108,7 @@ class CalendarActivity  : AppCompatActivity()  {
         dayOfMonth: Int
         ) {
             Log.w("CalendarActivity", "$year, $month, $dayOfMonth")
-            val stars = pref.getFloat("$year, ${month + 1}, $dayOfMonth", 0F)
+            val stars = pref.getFloat("$year, ${month + 1}, $dayOfMonth", -1F)
 
 
                 //make rating bar
@@ -142,9 +142,9 @@ class CalendarActivity  : AppCompatActivity()  {
     }
 
     private fun updateStars(rating: Float) {
-        var starId = STARS[rating.toInt() - 1]
         starInfo.removeAllViews()
         for (i in 0..<rating.toInt()){
+            var starId = STARS[rating.toInt() - 1]
             val imageView = ImageView(this@CalendarActivity)
             imageView.setImageResource(starId)
             val params = LinearLayout.LayoutParams(200, 200)
@@ -177,10 +177,10 @@ class CalendarActivity  : AppCompatActivity()  {
             selectedYear = year
             selectedMonth = month
             selectedDay = dayOfMonth
-            val stars = pref.getFloat("$year, ${month + 1}, $dayOfMonth", 0F)
+            val stars = pref.getFloat("$year, ${month + 1}, $dayOfMonth", -1F)
 
             // if not rated yet
-            if (stars == 0F){
+            if (stars == -1F){
                 this@CalendarActivity.showRatingDialog(year, month, dayOfMonth)
             } else {
                 this@CalendarActivity.updateInfoView(stars, year, month, dayOfMonth)
