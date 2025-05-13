@@ -35,7 +35,7 @@ import java.util.Timer
 
 class MainActivity : AppCompatActivity() {
     private var currStreak : Int = 0
-    private var username = "You"
+    private var username = ""
     private var newUser : String = ""
     private lateinit var database : DatabaseReference
     private lateinit var sdf : SimpleDateFormat
@@ -129,6 +129,18 @@ class MainActivity : AppCompatActivity() {
         leadadapt = Adapter(this, mutableListOf())
 
         sharedPreferences = getSharedPreferences("StreakPrefs", Context.MODE_PRIVATE)
+
+        newUser = sharedPreferences.getString("userId", null) ?: run {
+            val newId = database.push().key.toString()
+            sharedPreferences.edit().putString("userId", newId).apply()
+            newId
+        }
+
+        newUser = sharedPreferences.getString("userId", null) ?: run {
+            val newId = database.push().key.toString()
+            sharedPreferences.edit().putString("userId", newId).apply()
+            newId
+        }
 
         setContentView(R.layout.activity_main)
 
