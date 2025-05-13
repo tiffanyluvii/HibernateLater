@@ -43,33 +43,46 @@ class JournalActivity : AppCompatActivity() {
             todayExercises.clear()
 
             val currentDate = SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(Date())
+            val formatter = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
 
             // Group exercises by date
             val groupedByDate = exercises.groupBy { it.date }
 
+            val sortedGroups = groupedByDate.toList().sortedBy { (dateString, _) ->
+                formatter.parse(dateString)
+            }
+
             // Iterate over each date group in descending order (most recent date first)
-            groupedByDate.toSortedMap(compareByDescending { it }).forEach { (date, exerciseList) ->
+            sortedGroups.forEach { (date, exerciseList) ->
+                // container
+                val groupLayout = LinearLayout(this)
+                groupLayout.orientation = LinearLayout.VERTICAL
+
                 // Add a date header
                 val dateTextView = TextView(this)
                 dateTextView.text = "$date"
                 dateTextView.textSize = 20f
                 dateTextView.setTypeface(null, Typeface.BOLD)
                 dateTextView.setPadding(0, 16, 0, 8)
-                entriesLayout.addView(dateTextView)
+                groupLayout.addView(dateTextView)
 
                 // Add all exercises under that date
                 exerciseList.forEach { exercise ->
                     val exerciseTextView = TextView(this)
                     exerciseTextView.text = "${exercise.name} - Sets: ${exercise.sets}, Reps: ${exercise.reps}"
                     exerciseTextView.textSize = 16f
-                    entriesLayout.addView(exerciseTextView)
+                    groupLayout.addView(exerciseTextView)
 
                     // add to today's list of exercises if the date matches today's date
                     if (date == currentDate) {
                         todayExercises.add(exercise)
                     }
                 }
+
+                entriesLayout.addView(groupLayout, 0)
             }
+
+
         })
 
         homeButton.setOnClickListener { goBack() }
