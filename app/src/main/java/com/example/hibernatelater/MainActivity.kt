@@ -20,6 +20,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -34,7 +35,8 @@ import java.util.Timer
 
 class MainActivity : AppCompatActivity() {
     private var currStreak : Int = 0
-    private val username = "You"
+    private var username = "You"
+    private var newUser : String = ""
     private lateinit var database : DatabaseReference
     private lateinit var sdf : SimpleDateFormat
 
@@ -70,6 +72,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var leaderboardScreen: LinearLayout
     private lateinit var leaderboard: TextView
     private lateinit var streakView: ListView
+    private lateinit var nameInput : EditText
 
     private var checkExercise: Boolean = false
     private var checkBreak: Int = 0
@@ -118,9 +121,11 @@ class MainActivity : AppCompatActivity() {
 
     fun buildViewByCode() {
         var firebase: FirebaseDatabase = FirebaseDatabase.getInstance()
+        var auth : FirebaseAuth = FirebaseAuth.getInstance()
         var listener: DataListener = DataListener()
 
         database = firebase.getReference("Users")
+        newUser = database.push().key.toString()
         leadadapt = Adapter(this, mutableListOf())
 
         sharedPreferences = getSharedPreferences("StreakPrefs", Context.MODE_PRIVATE)
@@ -149,6 +154,8 @@ class MainActivity : AppCompatActivity() {
 
         streakView.adapter = leadadapt
         database.addValueEventListener(listener)
+
+        nameInput = findViewById(R.id.user_enter)
 
         exerciseNumber = findViewById(R.id.exerciseQuestion)
         enterButton = findViewById(R.id.enterButton)
@@ -183,7 +190,6 @@ class MainActivity : AppCompatActivity() {
         var task: ExerciseTimerTask = ExerciseTimerTask(this)
         timer.schedule(task, 0, 700)
 
-        updateUser()
     }
 
     private fun goToCalendar() {
@@ -421,7 +427,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun pressAward() {
-        updateUser()
         homepage.endExercise()
         homepage.endBreak()
 
@@ -433,7 +438,10 @@ class MainActivity : AppCompatActivity() {
         yesButton.visibility = View.GONE
         noButton.visibility = View.GONE
 
-
+        if(nameInput.text.toString() != "") {
+            username = nameInput.text.toString()
+            updateUser()
+        }
 
     }
 
@@ -517,36 +525,30 @@ class MainActivity : AppCompatActivity() {
 
         val newStreak = when {
             lastActive == null -> {
-                // First time user: start with 1
                 1
             }
             lastActive == currentDate -> {
-                // Same day: keep streak
                 currStreak
             }
             isConsecutiveDay(lastActive, currentDate) -> {
-                // Consecutive day: increment streak
                 currStreak + 1
             }
             else -> {
-                // Missed a day: reset streak
                 1
             }
         }
 
-        // Save updated streak and date locally
         with(sharedPreferences.edit()) {
             putString("login", currentDate)
             putInt("streak", newStreak)
             apply()
         }
 
-        // Push updated streak to Firebase
         val userData = mapOf(
             "name" to username,
             "streak" to newStreak
         )
-        database.child("user5").setValue(userData).addOnFailureListener { error ->
+        database.child(newUser).setValue(userData).addOnFailureListener { error ->
             Log.w("MainActivity", "Failed to update streak: ${error.message}")
         }
     }
@@ -555,7 +557,6 @@ class MainActivity : AppCompatActivity() {
         sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return try {
             val last = sdf.parse(lastDate) ?: return false
-            val current = sdf.parse(currentDate) ?: return false
             val calendar = Calendar.getInstance()
             calendar.time = last
             calendar.add(Calendar.DAY_OF_YEAR, 1)

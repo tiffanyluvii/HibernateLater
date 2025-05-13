@@ -38,6 +38,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.firebase.auth.ktx)
     val room_version = "2.7.1"  // Use the stable version of Room
     implementation("androidx.room:room-runtime:$room_version")  // Room Runtime
     implementation("androidx.room:room-ktx:$room_version")     // Room KTX for Kotlin
