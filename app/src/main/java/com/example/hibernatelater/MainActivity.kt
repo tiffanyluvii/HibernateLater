@@ -1,7 +1,9 @@
 package com.example.hibernatelater
 
 import android.app.ActivityOptions
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.icu.text.DecimalFormat
 import android.icu.text.NumberFormat
 import android.media.MediaPlayer
@@ -20,16 +22,21 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import java.util.Timer
 
 class MainActivity : AppCompatActivity() {
-    private var streak : Int = 0
+    private var currStreak : Int = 0
+    private val username = "You"
+    private lateinit var database : DatabaseReference
+    private lateinit var sdf : SimpleDateFormat
 
     private lateinit var bearIcon: View
     private lateinit var yesButton: AppCompatButton
@@ -70,6 +77,7 @@ class MainActivity : AppCompatActivity() {
     private var checkTimerView: Boolean = false
     private lateinit var currentMessage: String
 
+    private lateinit var sharedPreferences: SharedPreferences
 
     private lateinit var homepage: HomePage
     private lateinit var leadadapt : Adapter
@@ -112,6 +120,11 @@ class MainActivity : AppCompatActivity() {
         var firebase: FirebaseDatabase = FirebaseDatabase.getInstance()
         var listener: DataListener = DataListener()
 
+        database = firebase.getReference("Users")
+        leadadapt = Adapter(this, mutableListOf())
+
+        sharedPreferences = getSharedPreferences("StreakPrefs", Context.MODE_PRIVATE)
+
         setContentView(R.layout.activity_main)
 
         bearIcon = findViewById(R.id.bear)
@@ -134,7 +147,8 @@ class MainActivity : AppCompatActivity() {
         leaderboard = findViewById(R.id.leaderboard)
         streakView = findViewById(R.id.streakList)
 
-
+        streakView.adapter = leadadapt
+        database.addValueEventListener(listener)
 
         exerciseNumber = findViewById(R.id.exerciseQuestion)
         enterButton = findViewById(R.id.enterButton)
@@ -168,6 +182,8 @@ class MainActivity : AppCompatActivity() {
         var timer: Timer = Timer()
         var task: ExerciseTimerTask = ExerciseTimerTask(this)
         timer.schedule(task, 0, 700)
+
+        updateUser()
     }
 
     private fun goToCalendar() {
@@ -405,7 +421,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun pressAward() {
-        streakView.adapter = Adapter(this, getStreakData())
+        updateUser()
         homepage.endExercise()
         homepage.endBreak()
 
@@ -466,6 +482,14 @@ class MainActivity : AppCompatActivity() {
     inner class DataListener : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             if (snapshot.value != null) {
+                val userList = mutableListOf<User>()
+                for (userSnapshot in snapshot.children) {
+                    val name = userSnapshot.child("name").getValue(String::class.java) ?: "Unknown"
+                    val streak = userSnapshot.child("streak").getValue(Int::class.java) ?: 0
+                    userList.add(User(name, streak))
+                }
+                val sortedList = userList.sortedWith(User.sortByStreak)
+                leadadapt.update(sortedList)
                 Log.w("MainActivity", "new value is " + snapshot.value.toString())
             }
         }
@@ -476,25 +500,69 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    //testing class
+    //user class
     data class User(
         val name: String,
-        val streakDays: Int
+        val streak: Int
     ) {
         companion object {
-            val sortByStreak: Comparator<User> = compareByDescending { it.streakDays }
+            val sortByStreak: Comparator<User> = compareByDescending { it.streak }
         }
     }
 
-    // test set
-    private fun getStreakData(): List<User> {
-        return listOf(
-            User("Eli", 12),
-            User("Tiffany", 8),
-            User("Ryan", 5),
-            User("Grace", 22),
-            User("You", 0)
-        ).sortedWith(User.sortByStreak) // sort highest
+    private fun updateUser() {
+        val currentDate = SimpleDateFormat("MMM d, yyyy", Locale.getDefault()).format(Date())
+        val lastActive = sharedPreferences.getString("login", null)
+        currStreak = sharedPreferences.getInt("streak", 0)
+
+        val newStreak = when {
+            lastActive == null -> {
+                // First time user: start with 1
+                1
+            }
+            lastActive == currentDate -> {
+                // Same day: keep streak
+                currStreak
+            }
+            isConsecutiveDay(lastActive, currentDate) -> {
+                // Consecutive day: increment streak
+                currStreak + 1
+            }
+            else -> {
+                // Missed a day: reset streak
+                1
+            }
+        }
+
+        // Save updated streak and date locally
+        with(sharedPreferences.edit()) {
+            putString("login", currentDate)
+            putInt("streak", newStreak)
+            apply()
+        }
+
+        // Push updated streak to Firebase
+        val userData = mapOf(
+            "name" to username,
+            "streak" to newStreak
+        )
+        database.child("user5").setValue(userData).addOnFailureListener { error ->
+            Log.w("MainActivity", "Failed to update streak: ${error.message}")
+        }
+    }
+
+    private fun isConsecutiveDay(lastDate: String, currentDate: String): Boolean {
+        sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return try {
+            val last = sdf.parse(lastDate) ?: return false
+            val current = sdf.parse(currentDate) ?: return false
+            val calendar = Calendar.getInstance()
+            calendar.time = last
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+            sdf.format(calendar.time) == currentDate
+        } catch (e: Exception) {
+            false
+        }
     }
 
 }
